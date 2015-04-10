@@ -5,7 +5,7 @@ highlighter: pygments
 paginate: 8
 permalink: /:title
 
-title: ySite
-url: http://ysite.me
+title: kailiangchen
+url: http://kailiangchen.me
 feed: /atom.xml
-author_info: <a href="http://ysite.me/">pystone</a>
+author_info: <a href="http://kailiangchen.me/">kailiangchen</a>
