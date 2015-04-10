@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!--
+    * Author:         pystone(based on BeiYuu)
+    -->
+    <meta charset="utf-8" />
+    <title>VirtualBox in terminal on osx | ySite</title>
+    <meta name="author" content="pystone" />
+    <meta name="renderer" content="webkit">
+    <meta name="description" content="pystone's Blog" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+    <link rel="stylesheet" href="/css/default.css" type="text/css" />
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+    <link rel="alternate" type="application/atom+xml" title="Recent Entries" href="/atom.xml" />
+    <script src="/js/jquery-1.7.1.min.js" type="text/javascript"></script>
+</head>
+<body>
+
+
+    <!-- contant menu
+        <div class="home-menu">
+        <div class="home-icon-con">
+            <a class="home-menu-icon" href="/">ySite</a>
+            <a class="home-follow" href="#" title="Contact Me">+</a>
+        </div>
+        <div class="home-contact">
+            <a href="https://www.linkedin.com/in/pystone" target="_blank" style="margin-left:-5px;"><img src="https://static.licdn.com/scds/common/u/img/icon/apple-touch-icon.png" alt="" width="25"/></a>
+            <a href="http://github.com/pystone" target="_blank" style="text-align:center;"><img src="https://www.github.com/favicon.ico" alt="" width="22"/></a>
+            <a href="http://instagram.com/pystone/" target="_blank" style="text-align:right"><img src="http://d36xtkk24g8jdx.cloudfront.net/bluebar/00c6602/images/ico/favicon.ico" alt="" width="22"/></a>
+        </div>
+    </div> 
+    -->
+
+    <link rel="stylesheet" href="/js/prettify/prettify.css" />
+<style type="text/css">
+    body { background:#e8e8e8; }
+    @media screen and (max-width: 750px){
+        body { background:#fff; }
+    }
+    @media screen and (max-width: 1020px){
+        body { background:#fff; }
+    }
+</style>
+
+<div id="content">
+    <div class="entry">
+        <h1 class="entry-title"><a href="/vbox-in-terminal" title="VirtualBox in terminal on osx">VirtualBox in terminal on osx</a></h1>
+        <p class="entry-date">2014-09-07</p>
+        <h2>Preview</h2>
+
+<p>First I will show you the idea to run and control a virtual Linux directly on Terminal in OS X.</p>
+
+<p><a href="/images/vbox_in_terminal/p0.png" target="_blank">
+<img id="image-preview" class="reduced" src="/images/vbox_in_terminal/p0.png" alt>
+</a></p>
+
+<h2>Necessary files to download</h2>
+
+<ol>
+<li><p>VirtualBox 4.3.14: <a href="http://download.virtualbox.org/virtualbox/4.3.14/VirtualBox-4.3.14-95030-OSX.dmg">http://download.virtualbox.org/virtualbox/4.3.14/VirtualBox-4.3.14-95030-OSX.dmg</a></p></li>
+<li><p>VirtualBox 4.3.14 Oracle VM VirtualBox Extension Pack: <a href="http://download.virtualbox.org/virtualbox/4.3.14/Oracle_VM_VirtualBox_Extension_Pack-4.3.14-95030.vbox-extpack">http://download.virtualbox.org/virtualbox/4.3.14/Oracle_VM_VirtualBox_Extension_Pack-4.3.14-95030.vbox-extpack</a></p></li>
+<li><p>Install image of any Linux distribution without GUI. This tutorial will use CentOS 6.5 64-bit as an example. Some commands given below shall subject to adaptation (such as <code>yum</code>).</p></li>
+<li><p>VBoxGuestAdditions.iso: <a href="http://download.virtualbox.org/virtualbox/">http://download.virtualbox.org/virtualbox/</a> (Find the right version)</p></li>
+</ol>
+
+
+<h2>Install VirtualBox, Linux and Extension Pack</h2>
+
+<p>Installing VirtualBox and Linux is an easy thing for you, I will save the time here. After that, you should install VirtualBox Extension in OS X. Download and double-click it and you are done.</p>
+
+<h2>Configure ssh settings</h2>
+
+<p>To connect to the Linux using ssh, we should install ssh in Linux first. Turn on the virtual machine in VirtualBox in normal way, log in and type:</p>
+
+<pre><code>sudo yum install openssh-server openssh-clients
+</code></pre>
+
+<p>Now you can shut down the virtual machine:</p>
+
+<pre><code>sudo shutdown -h now
+</code></pre>
+
+<p>In the settings of Linux virtual machine, you should make the network attached to <em>NAT</em>.</p>
+
+<p><img src="/images/vbox_in_terminal/p1.png"></p>
+
+<p>Next we should bind the virtual machine in a specific port so that we can ssh to it. Open terminal in osx and type:</p>
+
+<pre><code>VBoxManage setextradata "Cent_6.5" "VBoxInternal/Devices/e1000/0/LUN#0/Config/ssh/Protocol" TCP
+VBoxManage setextradata "Cent_6.5" "VBoxInternal/Devices/e1000/0/LUN#0/Config/ssh/GuestPort" 22
+VBoxManage setextradata "Cent_6.5" "VBoxInternal/Devices/e1000/0/LUN#0/Config/ssh/HostPort" 3456
+</code></pre>
+
+<p>In the third command, 3456 is binding port of the host machine, indicating when ssh to localhost:3456, you are connecting to virtual machine. "Cent_6.5" is the name of the Linux virtual machine. I will use the same syntax in the following passage.</p>
+
+<h2>Manage the virtual machine in Terminal</h2>
+
+<p>Once you are done with all the stuffs above, you can manage your virtual machine in Terminal in osx. Type the command to turn on the vm:</p>
+
+<pre><code>VBoxHeadless -startvm "Cent_6.5” &amp;
+</code></pre>
+
+<p>Connet to it with:</p>
+
+<pre><code>ssh USERNAME@localhost -p 3456
+</code></pre>
+
+<p>As memtioned above, 3456 is the port you set just now. USERNAME is the user name of you Linux account.</p>
+
+<p>You can shut down the Linux in Terminal in osx using:</p>
+
+<pre><code>VBoxManage controlvm “Cent_6.5” poweroff
+</code></pre>
+
+<p>Or using the following command in Linux has the same effect:</p>
+
+<pre><code>shutdown -h now
+</code></pre>
+
+<h3>Create alias</h3>
+
+<p>You may not want to type all these things every time. So just create an alias in your .bashrc or .zshrc(yeah, I'm using zsh~). For example, here are my alias:</p>
+
+<pre><code>alias startvm="VBoxHeadless --startvm 'Cent_6.5' &amp;"
+alias stopvm="VBoxManage controlvm 'Cent_6.5' poweroff"
+alias sshtovm="ssh py@localhost -p 3456"
+</code></pre>
+
+<p>By doing so, you can turn on, connect to and shut down vm by typing:</p>
+
+<pre><code>startvm
+sshtovm
+stopvm
+</code></pre>
+
+<p>By now, you can manage your virtual machine simply in Terminal. But there is one thing left, file sharing between virtual machine and host.</p>
+
+<h2>File sharing between virtual machine and host</h2>
+
+<p>Now your virtual Linux and your host OS X are two separated systems. If you are not terrified with transfering files using scp, you can close this blog now. But if you want to access files in OS X in your Linux or vice versa, you may want to go on.</p>
+
+<h3>Virtual machine preparations</h3>
+
+<p>To enable the sharing feature, you should do some preparations in Linux.</p>
+
+<p>For Debian or Debian based distributions (Ubuntu)</p>
+
+<pre><code>apt-get install dkms build-essential linux-headers-generic
+</code></pre>
+
+<p>For Mandirva</p>
+
+<pre><code>urpmi dkms gcc make libgomp1 glibc-devel kernel-devel kernel-headers
+</code></pre>
+
+<p>For Fedora</p>
+
+<pre><code>yum install dkms binutils gcc make patch libgomp glibc-headers glibc-devel kernel-headers kernel-devel
+</code></pre>
+
+<p>or</p>
+
+<pre><code>yum install dkms binutils gcc make patch libgomp glibc-headers glibc-devel kernel-headers kernel-pae-devel
+</code></pre>
+
+<h3>Install VBoxGuestAdditions</h3>
+
+<p>Download the VBoxGuestAdditions.iso and mount it to Linux in settings.</p>
+
+<p><img src="/images/vbox_in_terminal/p2.png"></p>
+
+<p>In the virtual machine, type the following commands to mount iso file and install:</p>
+
+<pre><code>sudo makedir /media/cdrom    
+sudo mount /dev/sr0 /media/cdrom
+cd /media/cdrom
+sudo sh ./VBoxLinuxAdditions.run
+</code></pre>
+
+<p>One thing to be noted is that if no Xserver installed, you might get the error "Could not find the X.Org or XFree86 Window System, skipping.”. Just ignore it.</p>
+
+<h3>Select folder to be shared</h3>
+
+<p>In the vm settings, switch to Shared Folders tab. Add the folders you want to share.</p>
+
+<p><img src="/images/vbox_in_terminal/p2.png"></p>
+
+<p>Keep the name of it (take ‘PY’ for example) in mind, and we’ll use it later. Type the following command in Terminal in vm: (PY is the name you set in the vm settings)</p>
+
+<pre><code>mkdir ~/sf
+sudo mount -t vboxsf PY ~/sf
+</code></pre>
+
+<p>~/sf is the shared folder. One more thing, every time you restart the vm, the shared folder is unmounted and you should mount it again. So you can save the mount command in a .sh script and run it when start.</p>
+
+<p>Now, it's a perfect integrated vm in your osx. Just enjoy it!</p>
+
+<h2>Reference</h2>
+
+<ol>
+<li><a href="https://forums.virtualbox.org/viewtopic.php?t=15679">https://forums.virtualbox.org/viewtopic.php?t=15679</a></li>
+<li><a href="http://www.andrew-kirkpatrick.com/2011/12/virtualbox-guest-additions-with-shared-folders-on-mac-os-x/">http://www.andrew-kirkpatrick.com/2011/12/virtualbox-guest-additions-with-shared-folders-on-mac-os-x/</a></li>
+<li><a href="https://forums.virtualbox.org/viewtopic.php?t=15868">https://forums.virtualbox.org/viewtopic.php?t=15868</a></li>
+</ol>
+
+
+
+        <!-- Load disqus          -->
+
+        <div id="disqus_thread"></div>
+        <script type="text/javascript">
+            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+            var disqus_shortname = 'pystone'; // required: replace example with your forum shortname
+
+            /* * * DON'T EDIT BELOW THIS LINE * * */
+            (function() {
+                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+            })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+    </div>
+
+    <div class="sidenav">
+        <a href="/blog.html" target="_self"><h1 style="text-align:center;font-size:200%">Blog</h1></a>
+        <a href="/" target="_self"><h1 style="text-align:center;font-size:200%">Main</h1></a>
+    </div> 
+
+    <div class="sidenav">
+        <h2>Tech</h2>
+        <ul class="artical-list">
+        
+            <li><a href="/vbox-in-terminal">VirtualBox in terminal on osx</a></li>
+        
+            <li><a href="/use-ctags-in-osx-to-index-system-headers">Use ctags in osx to index system headers</a></li>
+        
+            <li><a href="/no-shark">Get rid of shark(退shark保平安)</a></li>
+        
+            <li><a href="/think-in-bitwise">Think in bitwise</a></li>
+        
+            <li><a href="/write-your-own-linux-shell">Write your own linux shell</a></li>
+        
+        </ul>
+
+        <h2>Life</h2>
+        <ul class="artical-list">
+        
+            <li><a href="/memorial-to-the-sysucpc14">My final CPC: memorial to SYSUCPC 14'</a></li>
+        
+            <li><a href="/change-the-look-of-my-blog">Change the look of my blog</a></li>
+        
+            <li><a href="/my-new-blog">Switch to GitHub Pages + Jekyll!</a></li>
+        
+        </ul>
+
+    </div>
+</div>
+
+<script src="/js/post.js" type="text/javascript"></script>
+
+
+    <!--**********************************-->
+    <!--****** Statistic code begin ******-->
+    <!--******  Remember to delete  ******-->
+    <!--**********************************-->
+    <div class="hide">
+        <script type="text/javascript" src="http://js.tongji.linezing.com/3424900/tongji.js"></script>
+        <noscript><a href="http://www.linezing.com"><img src="http://img.tongji.linezing.com/3424900/tongji.gif"/></a></noscript>
+    </div>
+    <!--**********************************-->
+    <!--******  Statistic code end  ******-->
+    <!--******  Remember to delete  ******-->
+    <!--**********************************-->
+
+    <script type="text/javascript">
+        $(function(){
+            $('.home-follow').click(function(e){
+                e.preventDefault();
+
+                if($('.home-contact').is(':visible')){
+                    $('.home-contact').slideUp(100);
+                }else{
+                    $('.home-contact').slideDown(100);
+                }
+            });
+        })
+    </script>
+</body>
+</html>

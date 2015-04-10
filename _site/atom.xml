@@ -1,0 +1,854 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+ 
+   <title>ySite</title>
+   <link href="http://ysite.me/atom.xml" rel="self" type="application/atom+xml"/>
+   <link href="http://ysite.me" rel="alternate" type="text/html" />
+   <updated>2014-11-24T00:49:40-05:00</updated>
+   <id>http://ysite.me</id>
+   <author>
+     <name></name>
+     <email></email>
+   </author>
+
+   
+   <entry>
+     <title>VirtualBox in terminal on osx</title>
+     <link href="http://ysite.me/vbox-in-terminal"/>
+     <updated>2014-09-07T00:00:00-04:00</updated>
+     <id>http://beiyuu.com/vbox-in-terminal</id>
+     <content type="html">&lt;h2&gt;Preview&lt;/h2&gt;
+
+&lt;p&gt;First I will show you the idea to run and control a virtual Linux directly on Terminal in OS X.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/images/vbox_in_terminal/p0.png&quot; target=&quot;_blank&quot;&gt;
+&lt;img id=&quot;image-preview&quot; class=&quot;reduced&quot; src=&quot;/images/vbox_in_terminal/p0.png&quot; alt&gt;
+&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2&gt;Necessary files to download&lt;/h2&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;VirtualBox 4.3.14: &lt;a href=&quot;http://download.virtualbox.org/virtualbox/4.3.14/VirtualBox-4.3.14-95030-OSX.dmg&quot;&gt;http://download.virtualbox.org/virtualbox/4.3.14/VirtualBox-4.3.14-95030-OSX.dmg&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;VirtualBox 4.3.14 Oracle VM VirtualBox Extension Pack: &lt;a href=&quot;http://download.virtualbox.org/virtualbox/4.3.14/Oracle_VM_VirtualBox_Extension_Pack-4.3.14-95030.vbox-extpack&quot;&gt;http://download.virtualbox.org/virtualbox/4.3.14/Oracle_VM_VirtualBox_Extension_Pack-4.3.14-95030.vbox-extpack&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Install image of any Linux distribution without GUI. This tutorial will use CentOS 6.5 64-bit as an example. Some commands given below shall subject to adaptation (such as &lt;code&gt;yum&lt;/code&gt;).&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;VBoxGuestAdditions.iso: &lt;a href=&quot;http://download.virtualbox.org/virtualbox/&quot;&gt;http://download.virtualbox.org/virtualbox/&lt;/a&gt; (Find the right version)&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+
+&lt;h2&gt;Install VirtualBox, Linux and Extension Pack&lt;/h2&gt;
+
+&lt;p&gt;Installing VirtualBox and Linux is an easy thing for you, I will save the time here. After that, you should install VirtualBox Extension in OS X. Download and double-click it and you are done.&lt;/p&gt;
+
+&lt;h2&gt;Configure ssh settings&lt;/h2&gt;
+
+&lt;p&gt;To connect to the Linux using ssh, we should install ssh in Linux first. Turn on the virtual machine in VirtualBox in normal way, log in and type:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;sudo yum install openssh-server openssh-clients
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now you can shut down the virtual machine:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;sudo shutdown -h now
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;In the settings of Linux virtual machine, you should make the network attached to &lt;em&gt;NAT&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/vbox_in_terminal/p1.png&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;Next we should bind the virtual machine in a specific port so that we can ssh to it. Open terminal in osx and type:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;VBoxManage setextradata &quot;Cent_6.5&quot; &quot;VBoxInternal/Devices/e1000/0/LUN#0/Config/ssh/Protocol&quot; TCP
+VBoxManage setextradata &quot;Cent_6.5&quot; &quot;VBoxInternal/Devices/e1000/0/LUN#0/Config/ssh/GuestPort&quot; 22
+VBoxManage setextradata &quot;Cent_6.5&quot; &quot;VBoxInternal/Devices/e1000/0/LUN#0/Config/ssh/HostPort&quot; 3456
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;In the third command, 3456 is binding port of the host machine, indicating when ssh to localhost:3456, you are connecting to virtual machine. &quot;Cent_6.5&quot; is the name of the Linux virtual machine. I will use the same syntax in the following passage.&lt;/p&gt;
+
+&lt;h2&gt;Manage the virtual machine in Terminal&lt;/h2&gt;
+
+&lt;p&gt;Once you are done with all the stuffs above, you can manage your virtual machine in Terminal in osx. Type the command to turn on the vm:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;VBoxHeadless -startvm &quot;Cent_6.5” &amp;amp;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Connet to it with:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;ssh USERNAME@localhost -p 3456
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;As memtioned above, 3456 is the port you set just now. USERNAME is the user name of you Linux account.&lt;/p&gt;
+
+&lt;p&gt;You can shut down the Linux in Terminal in osx using:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;VBoxManage controlvm “Cent_6.5” poweroff
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Or using the following command in Linux has the same effect:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;shutdown -h now
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3&gt;Create alias&lt;/h3&gt;
+
+&lt;p&gt;You may not want to type all these things every time. So just create an alias in your .bashrc or .zshrc(yeah, I&#39;m using zsh~). For example, here are my alias:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;alias startvm=&quot;VBoxHeadless --startvm &#39;Cent_6.5&#39; &amp;amp;&quot;
+alias stopvm=&quot;VBoxManage controlvm &#39;Cent_6.5&#39; poweroff&quot;
+alias sshtovm=&quot;ssh py@localhost -p 3456&quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;By doing so, you can turn on, connect to and shut down vm by typing:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;startvm
+sshtovm
+stopvm
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;By now, you can manage your virtual machine simply in Terminal. But there is one thing left, file sharing between virtual machine and host.&lt;/p&gt;
+
+&lt;h2&gt;File sharing between virtual machine and host&lt;/h2&gt;
+
+&lt;p&gt;Now your virtual Linux and your host OS X are two separated systems. If you are not terrified with transfering files using scp, you can close this blog now. But if you want to access files in OS X in your Linux or vice versa, you may want to go on.&lt;/p&gt;
+
+&lt;h3&gt;Virtual machine preparations&lt;/h3&gt;
+
+&lt;p&gt;To enable the sharing feature, you should do some preparations in Linux.&lt;/p&gt;
+
+&lt;p&gt;For Debian or Debian based distributions (Ubuntu)&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;apt-get install dkms build-essential linux-headers-generic
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;For Mandirva&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;urpmi dkms gcc make libgomp1 glibc-devel kernel-devel kernel-headers
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;For Fedora&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;yum install dkms binutils gcc make patch libgomp glibc-headers glibc-devel kernel-headers kernel-devel
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;or&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;yum install dkms binutils gcc make patch libgomp glibc-headers glibc-devel kernel-headers kernel-pae-devel
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3&gt;Install VBoxGuestAdditions&lt;/h3&gt;
+
+&lt;p&gt;Download the VBoxGuestAdditions.iso and mount it to Linux in settings.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/vbox_in_terminal/p2.png&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;In the virtual machine, type the following commands to mount iso file and install:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;sudo makedir /media/cdrom    
+sudo mount /dev/sr0 /media/cdrom
+cd /media/cdrom
+sudo sh ./VBoxLinuxAdditions.run
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;One thing to be noted is that if no Xserver installed, you might get the error &quot;Could not find the X.Org or XFree86 Window System, skipping.”. Just ignore it.&lt;/p&gt;
+
+&lt;h3&gt;Select folder to be shared&lt;/h3&gt;
+
+&lt;p&gt;In the vm settings, switch to Shared Folders tab. Add the folders you want to share.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/vbox_in_terminal/p2.png&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;Keep the name of it (take ‘PY’ for example) in mind, and we’ll use it later. Type the following command in Terminal in vm: (PY is the name you set in the vm settings)&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;mkdir ~/sf
+sudo mount -t vboxsf PY ~/sf
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;~/sf is the shared folder. One more thing, every time you restart the vm, the shared folder is unmounted and you should mount it again. So you can save the mount command in a .sh script and run it when start.&lt;/p&gt;
+
+&lt;p&gt;Now, it&#39;s a perfect integrated vm in your osx. Just enjoy it!&lt;/p&gt;
+
+&lt;h2&gt;Reference&lt;/h2&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;a href=&quot;https://forums.virtualbox.org/viewtopic.php?t=15679&quot;&gt;https://forums.virtualbox.org/viewtopic.php?t=15679&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://www.andrew-kirkpatrick.com/2011/12/virtualbox-guest-additions-with-shared-folders-on-mac-os-x/&quot;&gt;http://www.andrew-kirkpatrick.com/2011/12/virtualbox-guest-additions-with-shared-folders-on-mac-os-x/&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://forums.virtualbox.org/viewtopic.php?t=15868&quot;&gt;https://forums.virtualbox.org/viewtopic.php?t=15868&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+</content>
+   </entry>
+   
+   <entry>
+     <title>Use ctags in osx to index system headers</title>
+     <link href="http://ysite.me/use-ctags-in-osx-to-index-system-headers"/>
+     <updated>2014-09-02T00:00:00-04:00</updated>
+     <id>http://beiyuu.com/use-ctags-in-osx-to-index-system-headers</id>
+     <content type="html">&lt;p&gt;When using IDE like Xcode to write code, we may be impressed by the convenience brought by &quot;Jump to definition&quot; feature. However, when we write code in command-line environment like vim, we cannot natively enjoy the convenience anymore. But, ctags brings the great feature to command-line environment.&lt;/p&gt;
+
+&lt;h2&gt;Install ctags in OS X Mavericks&lt;/h2&gt;
+
+&lt;h3&gt;ctags in command-line tools from Xcode?&lt;/h3&gt;
+
+&lt;p&gt;When you install the command-line tools from Xcode, you have a ctags installed and you can use it directly. However, it does not support the -R option (recursive), which is a valid option in linux versions. And I find no way to generate tag files recursively in this version. So we have to abandon it and install it manually.&lt;/p&gt;
+
+&lt;h3&gt;Install through Homebrew?&lt;/h3&gt;
+
+&lt;p&gt;There are many tutorials saying that we can install through Homebrew. Indeed, Homebrew can install ctags in your os with the command:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;brew install ctags
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;But, it installs to the subdirectory under Cellar(/usr/local/Cellar/ctags/5.8). Even if you add the path to $PATH, the Xcode version is still the default one. You can check it with the command:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;➜  ~  type ctags
+ctags is /usr/local/bin/ctags
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;We can add an alias in .bashrc or .zshrc file to redirect the command ctags to Homebrew version. But for an elegant programmer, it&#39;s not elegant. So we can just remove the Xcode version and install from source code.&lt;/p&gt;
+
+&lt;h3&gt;Install from source code&lt;/h3&gt;
+
+&lt;p&gt;First, download the source code from &lt;a href=&quot;http://sourceforge.net/projects/ctags/files/ctags/5.8/ctags-5.8.tar.gz/download&quot;&gt;&lt;em&gt;SourceForge&lt;/em&gt;&lt;/a&gt;. Unzip it and cd into the directory.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;./configure
+make
+sudo make install
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;OK, the linux version is installed and you can simply use it with command ctags.&lt;/p&gt;
+
+&lt;h2&gt;Generate tags files in system headers directories&lt;/h2&gt;
+
+&lt;p&gt;Most system headers are located in /usr/include/tags and /usr/local/include/tags. So we change directory into them and type:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;ctags -R .
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now we have tags files in each of the directory.&lt;/p&gt;
+
+&lt;h2&gt;Put tags files on vim&#39;s radar&lt;/h2&gt;
+
+&lt;p&gt;You are now one step away from indexing system functions in vim. Edit your personal .vimrc file and add two lines:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;set tags+=/usr/local/include/tags
+set tags+=/usr/include/tags
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Save and exit. Yoohoo~, everything is done!&lt;/p&gt;
+
+&lt;p&gt;You can open an arbitary c file and navigate to a system function like printf. Hit ctrl+[ and you can now jump to the definition of printf!&lt;/p&gt;
+</content>
+   </entry>
+   
+   <entry>
+     <title>Get rid of shark(退shark保平安)</title>
+     <link href="http://ysite.me/no-shark"/>
+     <updated>2014-06-19T00:00:00-04:00</updated>
+     <id>http://beiyuu.com/no-shark</id>
+     <content type="html">&lt;p&gt;---- English version&lt;/p&gt;
+
+&lt;p&gt;I was taking 15513(an online version of 15213) before I came to CMU in China. Working on shark machines was a hard time due to the poor network connection between China and the US. However, some of the labs must be done on shark machines. For example, in bomblab, you have to use gdb to trace the program step by step in shark machine. That was a disaster for all the students in China. So I figured out some solutions to the issue to free us from shark. If you happen to have a hard time working on shark machines, you can also check out this blog and get rid of shark.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;WARNING: You must ensure that you have your own 64-bit linux to do the labs if you decide not to use shark machines. Any distribution that can run driver.pl in datalab will be fine.&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;FYI, here is my distribution (CentOS 6.5):&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;➜  ~  cat /proc/version 
+Linux version 2.6.32-431.17.1.el6.x86_64 (mockbuild@c6b8.bsys.dev.centos.org) (gcc version 4.4.7 20120313 (Red Hat 4.4.7-4) (GCC) ) #1 SMP Wed May 7 23:32:49 UTC 2014
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;I will take bomblab as example.&lt;/p&gt;
+
+&lt;p&gt;First of all, let&#39;s find out the reference offset of string &quot;Initialization error: Running on an illegal host&quot; using &lt;em&gt;strings&lt;/em&gt; command. In my bomb, it is referenced at 0x29a0.&lt;/p&gt;
+
+&lt;p&gt;Come back to the assembly. I find the offset 0x29a0 loacted in initialize_bomb function. Now, we have a strong evidence to suspect this function. So I try to delete the invocation of this function in main.&lt;/p&gt;
+
+&lt;h2&gt;Delete the invocation of initialize_bomb&lt;/h2&gt;
+
+&lt;p&gt;My main routine is to rewrite the invocation to 90(nop). First job is to find the offset of the invocation. After searching the assembly and I find a instruction &lt;code&gt;callq  4015ed &amp;lt;initialize_bomb&amp;gt;&lt;/code&gt;. It is located at 0x400d57 and its machine code is &quot;e8 91 08 00 00&quot;.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/no_shark/main_initialize_bomb.png&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;Next, let&#39;s modify the binary. Open the Terminal type:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;vim -b bomb
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;After hitting enter, you will see a bunch of nonsense. Don&#39;t worry, type:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;:%!xxd
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now you can look for the data at specific offset conveniently. Let&#39;s jump to the offset 0x000d57 and ensure the data at that offset is what we wrote down &quot;e8 91 08 00 00&quot;.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/no_shark/before_edit.png&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;After ensuring it&#39;s the right place, delete these five bytes and input &quot;90 90 90 90 90&quot;.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/no_shark/after_edit.png&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;Alright, now we just need to save the change and exit by typing:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;:%!xxd -r
+:x
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now, you can run and debug the bomb in your own 64-bit linux. Yeah!&lt;/p&gt;
+
+&lt;p&gt;One more thing, why the offset we wrote down is 0x400d57, while we change the data at 0x000d57? Actually the offset we found in assembly is virtual address, but the corresponding position in the file is the offset to the head of the file. For more details, you can refer to Chapter 7 Linking of CSAPP or &lt;a href=&quot;http://www.amazon.com/Linkers-Kaufmann-Software-Engineering-Programming/dp/1558604960&quot;&gt;&lt;em&gt;Linkers and Loaders&lt;/em&gt;&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2&gt;Modify host name&lt;/h2&gt;
+
+&lt;p&gt;Although the method above can free us from shark, it is a sort of brute-force, since it modifies the original binary of bomb. Is there another way to bypass the initialize_bomb? Let&#39;s dig into that function.&lt;/p&gt;
+
+&lt;p&gt;Have a closer look at the instructions before &lt;code&gt;mov    $0x4029a0,%edi&lt;/code&gt; in initialize_bomb. We can easily find a suspicious instruction &lt;code&gt;callq  400b70 &amp;lt;gethostname@plt&amp;gt;&lt;/code&gt;. After careful analysis of the surrounding instructions, we find that only when the return value of gethostname equals 0 and the returned name falls into the range in host_table, the examination succeeds.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/no_shark/initialize_bomb.png&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;So the question becomes &#39;how can we fulfill the requirement?&#39;. Check out the gethostname(&lt;a href=&quot;http://linux.die.net/man/2/gethostname&quot;&gt;http://linux.die.net/man/2/gethostname&lt;/a&gt;) we can know it is used to get the host name of the computer. If we run the function in shark, the returned host name is the domain name of the machine (e.g. bambooshark.ics.cs.cmu.edu).&lt;/p&gt;
+
+&lt;p&gt;Now we can change the host name of our own 64-bit linux to the domain name of one of the shark machines. We can sethostname function to do that. Here is my code to change the host name. After executing that, we can successfully run the bomb in our own 64-bit linux.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#include &amp;lt;unistd.h&amp;gt;
+#include &amp;lt;stdio.h&amp;gt;
+#include &amp;lt;string.h&amp;gt;
+
+int main() {
+    char hostname[100] = {0};
+    int res = gethostname(hostname, sizeof(hostname));
+    printf(&quot;Old host name: %s. (Return %d)\n&quot;, hostname, res);
+
+    strcpy(hostname, &quot;bambooshark.ics.cs.cmu.edu&quot;);
+
+    res = sethostname(hostname, strlen(hostname));
+    gethostname(hostname, sizeof(hostname));
+    printf(&quot;New host name: %s. (Return %d)\n&quot;, hostname, res);
+    return 0;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Or you can clone the code by:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;git clone https://gist.github.com/87ead03a9c3a75660bb9.git
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2&gt;Final words&lt;/h2&gt;
+
+&lt;p&gt;Have fun with the labs :P&lt;/p&gt;
+
+&lt;p&gt;---- 中文版本&lt;/p&gt;
+
+&lt;p&gt;在国内远程上15213的筒子们，碰到必须要在shark上做的lab必定是蛋疼菊紧。因为在国内ssh连上shark一个按键需要n(n&gt;=1)秒才能得到反馈的感觉真是想把电脑砸了。但是如果在本机跑，“Initialization error: Running on an illegal host”的错误让你不得不乖乖回到shark的怀抱。今儿咱就不九评shark了，直接给你指条明路，施主请退shark保平安。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;注意：在决定退shark之前请务必有一个64位的linux环境来运行lab的程序，以datalab中能顺利运行driver.pl为准！&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;为了方便参考，我的本机平台是CentOS 6.5：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;➜  ~  cat /proc/version 
+Linux version 2.6.32-431.17.1.el6.x86_64 (mockbuild@c6b8.bsys.dev.centos.org) (gcc version 4.4.7 20120313 (Red Hat 4.4.7-4) (GCC) ) #1 SMP Wed May 7 23:32:49 UTC 2014
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;以bomblab为例，我们来看下该怎么在非shark平台运行bomb。首先我们通过strings查看所有字符串，确定“Initialization error: Running on an illegal host”这个错误提示是在哪里被引用的。我的bomb里的偏移是29a0。然后回到bomb的反汇编里面查看，这个偏移是在initialize_bomb这个函数里面。初步怀疑是这个函数在检测程序的运行环境，索性把这个调用指令删掉试试看。&lt;/p&gt;
+
+&lt;h2&gt;屏蔽initialize_bomb函数的调用指令&lt;/h2&gt;
+
+&lt;p&gt;屏蔽的主要思想是把调用指令改写成90(nop)指令。首先第一步咱要找到这个调用指令的位置。查看bomb的汇编，找到main函数中&lt;code&gt;callq  4015ed &amp;lt;initialize_bomb&amp;gt;&lt;/code&gt;指令的地址。例如我这个bomb的地址是400d57。同时记下该指令的机器码“e8 91 08 00 00”。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/no_shark/main_initialize_bomb.png&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;接下来就要修改二进制文件。在terminal中输入：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;vim -b bomb
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;来编辑bomb。打开后会看到一堆乱码，别急，继续输入：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;:%!xxd
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;有没有觉得世界瞬间清净了！！你可以非常方便的查看每个位置的数据了。找到000d57位置，确认该位置之后的5个字节的内容是刚才我们记下的机器码“e8 91 08 00 00”。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/no_shark/before_edit.png&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;确认无误之后把这五个字节的内容删除，然后输入“90 90 90 90 90”。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/no_shark/after_edit.png&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;很好，现在就修改成功了。最后输入：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;:%!xxd -r
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;回到乱码界面，再输入：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;:x
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;保存并退出。好了，再在非shark机运行bomb就不会报错了。也不会对实验结果造成影响。&lt;/p&gt;
+
+&lt;p&gt;p.s. 我们在最开始记录的地址是400d57，而在修改bomb的二进制文件时修改的却是000d57位置上的值。其实这是因为汇编中的地址实际是virtual address，而打开的二进制文件时是实际相对文件开头的offset。具体的信息可以查看&lt;a href=&quot;http://book.douban.com/subject/1436811/&quot;&gt;&lt;em&gt;Linkers and Loaders&lt;/em&gt;&lt;/a&gt;这本书，或者&lt;a href=&quot;http://book.douban.com/subject/3652388/&quot;&gt;《程序员的自我修养》&lt;/a&gt;。&lt;/p&gt;
+
+&lt;h2&gt;修改host name&lt;/h2&gt;
+
+&lt;p&gt;上面的方法虽然能够正常运行，但是直接修改了binary，未免显得太过暴力。咱是文明人，这种一上来直接搞破坏的事咱还是尽量少做。那我们就来进一步分析下initialize_bomb这个函数，看有没有其他的方法来绕过检测。&lt;/p&gt;
+
+&lt;p&gt;回到initialize_bomb函数中，仔细看&lt;code&gt;mov    $0x4029a0,%edi&lt;/code&gt;这条指令之前的指令，发现一条可疑指令&lt;code&gt;callq  400b70 &amp;lt;gethostname@plt&amp;gt;&lt;/code&gt;。再稍微看下该指令之后的指令，可以发现只有gethostname函数的返回值为0的时候才算检测成功。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/no_shark/initialize_bomb.png&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;那我们再稍微查一下gethostname的作用，发现这是用来获取host name的函数（&lt;a href=&quot;http://linux.die.net/man/2/gethostname&quot;&gt;http://linux.die.net/man/2/gethostname&lt;/a&gt;）。在shark中运行一下这个函数查看shark的host name，发现就是该台shark机的域名（例如bambooshark.ics.cs.cmu.edu）。&lt;/p&gt;
+
+&lt;p&gt;于是可以考虑把本机名改成shark的host name来骗过这个检测。既然有gethostname函数，那应该也会有sethostname函数。一查果不其然，可以利用sethostname函数来修改本机的host name（&lt;a href=&quot;http://linux.die.net/man/2/sethostname&quot;&gt;http://linux.die.net/man/2/sethostname&lt;/a&gt;）。参照用法，写一个小程序（chg_hostname.c）修改了host name之后再运行bomb，正常运行。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#include &amp;lt;unistd.h&amp;gt;
+#include &amp;lt;stdio.h&amp;gt;
+#include &amp;lt;string.h&amp;gt;
+
+int main() {
+    char hostname[100] = {0};
+    int res = gethostname(hostname, sizeof(hostname));
+    printf(&quot;Old host name: %s. (Return %d)\n&quot;, hostname, res);
+
+    strcpy(hostname, &quot;bambooshark.ics.cs.cmu.edu&quot;);
+
+    res = sethostname(hostname, strlen(hostname));
+    gethostname(hostname, sizeof(hostname));
+    printf(&quot;New host name: %s. (Return %d)\n&quot;, hostname, res);
+    return 0;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;或者也可以直接通过&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;git clone https://gist.github.com/87ead03a9c3a75660bb9.git
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;获得代码。&lt;/p&gt;
+
+&lt;h2&gt;后记&lt;/h2&gt;
+
+&lt;p&gt;Have fun playing with the labs~&lt;/p&gt;
+</content>
+   </entry>
+   
+   <entry>
+     <title>Think in bitwise</title>
+     <link href="http://ysite.me/think-in-bitwise"/>
+     <updated>2014-06-03T00:00:00-04:00</updated>
+     <id>http://beiyuu.com/think-in-bitwise</id>
+     <content type="html">&lt;h2&gt;Prerequisite&lt;/h2&gt;
+
+&lt;p&gt;Bitwise operation allows programmers to directly operate number variables in low-level perspective. Types of number could include signed and unsigned integer and float-point number (more on this later). Basically in C, you can use the following operations: left shift and right shift (&amp;lt;&amp;lt; and &gt;&gt;), bitwise and, or, xor, not. Here is an interesting and enlightening passage about bitwise operation, which shocked me a lot when I first read it. It&#39;s written by Matrix67, a legend person among Chinese math and computer science bloggers. But mind yourself, it is written in Chinese.&lt;/p&gt;
+
+&lt;p&gt;OK. If you are familiar with those operations, we can get to the banquet now!&lt;/p&gt;
+
+&lt;p&gt;Oh, sorry. One more thing. Without further instruction, all the problems mentioned below can only be solved using &amp;lt;&amp;lt;, &gt;&gt;, &amp;amp;, |, ~, !, ^, + and any control flow statement (if, switch, for, while, ?: statement, etc) and logic operation (&amp;amp;&amp;amp;, ||, etc) is strictly forbidden. Within these rules, you should reduce the total number of operations as much as possible. This gives us the motivation to keep improving our implementation, and then, the fun of this lab.&lt;/p&gt;
+
+&lt;h2&gt;Appetizer&lt;/h2&gt;
+
+&lt;p&gt;Now I&#39;m gonna show you some higher level usage of bitwise operation by explaning my solutions to the lab problems.&lt;/p&gt;
+
+&lt;h3&gt;isEqual&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;/* 
+ * isEqual - return 1 if x == y, and 0 otherwise 
+ *   Examples: isEqual(5,5) = 1, isEqual(4,5) = 0
+ *   Legal ops: ! ~ &amp;amp; ^ | + &amp;lt;&amp;lt; &amp;gt;&amp;gt;
+ *   Max ops: 5
+ *   Rating: 2
+ */
+int isEqual(int x, int y) {
+    // To be solved
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Quite easy eh. Since we know, one simple way to check if two numbers are identical is to theck the result of xor. Exactly. So we simply return the negation of the xor result. Like the following:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;int isEqual(int x, int y) {
+    return !(x^y);
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This problem is fairly easy, but the idea is important: using xor to check the equivalence of two numbers.&lt;/p&gt;
+
+&lt;h3&gt;byteSwap&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;/* 
+ * byteSwap - swaps the nth byte and the mth byte
+ *  Examples: byteSwap(0x12345678, 1, 3) = 0x56341278
+ *            byteSwap(0xDEADBEEF, 0, 2) = 0xDEEFBEAD
+ *  You may assume that 0 &amp;lt;= n &amp;lt;= 3, 0 &amp;lt;= m &amp;lt;= 3
+ *  Legal ops: ! ~ &amp;amp; ^ | + &amp;lt;&amp;lt; &amp;gt;&amp;gt;
+ *  Max ops: 25
+ *  Rating: 2
+ */
+int byteSwap(int x, int n, int m) {
+    // To be solved
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;At first glance, it&#39;s easy. But the first few ideas came to my mind involved if statement. Hmm, need to think over it again. Yeah, maybe I could extract the nth byte out into a variable, right shift n bits, left shift m bits and put it into mth byte. The same to mth byte. Great. So here comes the first version of my solution.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;int byteSwap(int x, int n, int m) {
+    int nl = 0;
+    int ml = 0;
+    int nb = 0;
+    int mb = 0;
+    n &amp;lt;&amp;lt;= 3;
+    m &amp;lt;&amp;lt;= 3;
+
+    nl = 0xff &amp;lt;&amp;lt; n;
+    ml = 0xff &amp;lt;&amp;lt; m;
+    nb = x &amp;amp; nl;
+    mb = x &amp;amp; ml;
+
+    nb &amp;gt;&amp;gt;= n;
+    nb &amp;lt;&amp;lt;= m;
+    nb &amp;amp;= ml;
+    mb &amp;gt;&amp;gt;= m;
+    mb &amp;lt;&amp;lt;= n;
+    mb &amp;amp;= nl;
+
+    x &amp;amp;= ~(nl | ml);
+    x |= (nb | mb);
+    return x;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Quite readable and easy to understand. But the total operations reaches 17, while many people can reduce it down to 10. How? After carefully inspecting these codes, I found most operations are wasted in shifting to get the nb and mb to the right location. This could be improved. But, how? If I want to change two bytes, I have to clean the target byte with &amp;amp; and put the byte into it with | (or +). Since no if statement available, the source byte cannot be shift to the target location directly using (n-m or m-n) because I cannot decide wheather to shift left or right. Wait. In &quot;isEqual&quot; problem, we use the property of xor that the result of xor of two identical numbers equals 0. And with another property of xor, commutative law, we can eliminate a number just by xor itself! Great idea.&lt;/p&gt;
+
+&lt;p&gt;So the solution comes out naturally. We first xor the nth byte and mth byte into a new variable. And then shift left to nth byte and xor the original number. Now the nth byte stores the information of mth byte because we xor nth byte twice. Do the same to mth byte and we successfully exchange two bytes!&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;int byteSwap(int x, int n, int m) {
+    int t = 0;
+    n &amp;lt;&amp;lt;= 3;
+    m &amp;lt;&amp;lt;= 3;
+
+    t = 0xff &amp;amp; ((x&amp;gt;&amp;gt;n) ^ (x&amp;gt;&amp;gt;m));
+
+    x ^= t&amp;lt;&amp;lt;n;
+    x ^= t&amp;lt;&amp;lt;m;
+
+    return x;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Magic xor operation. So another tricky usage of xor. Now, things get more fun.&lt;/p&gt;
+
+&lt;h3&gt;sign&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;/* 
+ * sign - return 1 if positive, 0 if zero, and -1 if negative
+ *  Examples: sign(130) = 1
+ *            sign(-23) = -1
+ *  Legal ops: ! ~ &amp;amp; ^ | + &amp;lt;&amp;lt; &amp;gt;&amp;gt;
+ *  Max ops: 10
+ *  Rating: 2
+ */
+int sign(int x) {
+    // To be solved
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;In 2&#39;s complement, the most significant bit defines it to be a negative (1) or a non-negative (0) number. But it cannot distinguish positive numbers from 0. On the other hand, if we use ! operation, we could distinguish 0 from non-zero numbers, but not positive from negative. So we could combine these two operations and get the answer. One thing to be noted, right shifting an int variable x will result in 0 (when x is non-negative) or -1 (when x is negative; -1 == 0xFFFFFFFF, right shift signed number will automatically fill the sign bit). Here comes the code:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;int sign(int x) {
+    return ((!x)^1) | (x&amp;gt;&amp;gt;31);
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2&gt;Main course&lt;/h2&gt;
+
+&lt;p&gt;OK. We have seen some easy problems and know how to think in bitwise operation. Now we are taking some real challenges.&lt;/p&gt;
+
+&lt;h3&gt;logicalNeg&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;/* 
+ * logicalNeg - implement the ! operator using any of 
+ *              the legal operators except !
+ *   Examples: logicalNeg(3) = 0, logicalNeg(0) = 1
+ *   Legal ops: ~ &amp;amp; ^ | + &amp;lt;&amp;lt; &amp;gt;&amp;gt;
+ *   Max ops: 12
+ *   Rating: 4 
+ */
+ int logicalNeg(int x) {
+    // To be solved
+ }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;To make it more bitwise way, this function should return 0 if in argument has any 1 in any bit, otherwise return 1. In this case, the most obvious way is to or every bit and return the result. Unfortunately, it exceeds the maximun op. But it is a right way. Now that we cannot test only 1 bit at one time, we may test more bits at one time. Half is a good idea.&lt;/p&gt;
+
+&lt;p&gt;First, we let the high 16 bits or to low 16 bits of x. Now all the 1(s) in x (if any) comes to low 16 bits of x. And then, let the second byte from the least significant byte or to the least significant byte. All the 1(s) in x (if any) comes to least significant byte. Repeat this process until all the 1s comes to the least significant bit. Now we just need to return the negation of that bit. But the number of operations reaches 12, the maximum limitation. Seems that we need to change a way to think.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;int logicalNeg(int x) {
+    x |= (x&amp;gt;&amp;gt;16);
+    x |= (x&amp;gt;&amp;gt;8);
+    x |= (x&amp;gt;&amp;gt;4);
+    x |= (x&amp;gt;&amp;gt;2);
+    x |= (x&amp;gt;&amp;gt;1);
+    x = ~x;
+    return x &amp;amp; 1;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Think deeper, and you will find that the key of this problem lies in distinguishing 0 from non-zero numbers. In bitwise world, 0 is unique because the 2&#39;s complement of 0 equals 0 itself, while other numbers are not. But if we solely take advantage of this, we will come back to the awkward situation where we need to find if a number is 0. We should go further.&lt;/p&gt;
+
+&lt;p&gt;Transforming a 32-bit number into a 1-bit number mostly depends on one bit (usually either the MSB or the LSB). And the only one bit in a number that is predicable is sign bit (MSB). Think about this. The sign bit of the 2&#39;s complement and the origin of a non-zero number must be different. While 0 is the same (both 0). So we can take advantage of this and solve the problem within 6 operations.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;int logicalNeg(int x) {
+    x = ((~x) &amp;amp; (~(~x+1)))&amp;gt;&amp;gt;31;
+    return x &amp;amp; 1;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3&gt;howManyBits&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;/* howManyBits - return the minimum number of bits required to represent x in
+ *             two&#39;s complement
+ *  Examples: howManyBits(12) = 5
+ *            howManyBits(298) = 10
+ *            howManyBits(-5) = 4
+ *            howManyBits(0)  = 1
+ *            howManyBits(-1) = 1
+ *            howManyBits(0x80000000) = 32
+ *  Legal ops: ! ~ &amp;amp; ^ | + &amp;lt;&amp;lt; &amp;gt;&amp;gt;
+ *  Max ops: 90
+ *  Rating: 4
+ */
+int howManyBits(int x) {
+    // To be solved
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Finally here comes the real boss. Look at the max op. It&#39;s 90! So, let&#39;s figure out a way to solve it first. We can quickly realize that positive and negative number can be solved by almost the same way, either counting the number of leading 0s (positive) or leading 1s (negative). And then increase that number by 1 and let 32 substract it. That is the answer. Since the method is same, we first complement x if it is negative:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;x ^= (x&amp;gt;&amp;gt;31); // is negative, complement it 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Well then, fill the bits right to the leading 1 with 1:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;x |= x&amp;gt;&amp;gt;1;
+x |= x&amp;gt;&amp;gt;2;
+x |= x&amp;gt;&amp;gt;4;
+x |= x&amp;gt;&amp;gt;8;
+x |= x&amp;gt;&amp;gt;16;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now we have to count the number of 1 in x. Here I use a method introduced by Matrix67 to do that.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;x := (x and $55555555) + ((x shr 1) and $55555555); 
+x := (x and $33333333) + ((x shr 2) and $33333333); 
+x := (x and $0F0F0F0F) + ((x shr 4) and $0F0F0F0F); 
+x := (x and $00FF00FF) + ((x shr 8) and $00FF00FF); 
+x := (x and $0000FFFF) + ((x shr 16) and $0000FFFF); 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;I just quote the codes from his blog. It&#39;s written in Pascal. Details about how this piece of code work can be found in his blog. I&#39;m not going to duplicate it here. So let&#39;s move on.&lt;/p&gt;
+
+&lt;p&gt;Now we get the number of 1s in x. And we just have to do some special judgements like returning 32 when given 0x80000000. But look at the total ops, 84. So, let&#39;s optimize!&lt;/p&gt;
+
+&lt;p&gt;Look at the process of counting 1 in x. That takes too many ops because all the constants must range from 0 to 0xff and we spend so many ops in constructing constants. So, what about adding 1s in every 4 bits at first? That only needs one constant: 0x11111111. We can follow the old idea to add every two neighboring 4-bit into four 8-bit sections? It&#39;s good but it needs constant 0x0F0F0F0F.&lt;/p&gt;
+
+&lt;p&gt;We can do a hack here. The old idea follows the principle that adding neighboring sections together and the section&#39;s space of bit doubles. So the result would not overflow in that new section. But in a 4-bit section, the maximum number of 1 is four. And the maximum number of 1 of two 4-bit sections is eight, which is well within the capacity of a 4-bit section. So we directly add the higher four 4-bit sections into the lower four 4-bit sections respectively.&lt;/p&gt;
+
+&lt;p&gt;At last, we extract the lower four 4-bit sections and add them up. That&#39;s the answer. It looks like:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;// calculate all ones in every 4 bits
+x = (x&amp;amp;phr1) + ((x&amp;gt;&amp;gt;1)&amp;amp;phr1) + ((x&amp;gt;&amp;gt;2)&amp;amp;phr1) + ((x&amp;gt;&amp;gt;3)&amp;amp;phr1);
+
+// add the result in low 16 bits
+// will not overflow cuz the maximum is 8
+x += (x&amp;gt;&amp;gt;16);
+
+// extract lower four 4-bit sections and add them up
+x = (x&amp;amp;0xf) + ((x&amp;gt;&amp;gt;4)&amp;amp;0xf) + ((x&amp;gt;&amp;gt;8)&amp;amp;0xf) + ((x&amp;gt;&amp;gt;12)&amp;amp;0xf);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now the number of ops comes down to 48. It&#39;s a great progress, but still not enough. Following this way might get a little ops down, but only a little. So we need to find another way.&lt;/p&gt;
+
+&lt;p&gt;Since it&#39;s counting the number of leading 0s, why wouldn&#39;t we just count them directly? We can adopt a binary process to count leading 0s. First shift right 16 bits and see if it equals 0. If yes, add 16 to answer or 0 otherwise. Next, shift right 8 bits more (or less, depending on the previous answer value). And then 4 bits, 2 bits and 1 bit. Finally some special cases should be taken care of. So the code should be like this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;n = (!!(x&amp;gt;&amp;gt;16))&amp;lt;&amp;lt;4;
+n += (!!(x&amp;gt;&amp;gt;(n+8)))&amp;lt;&amp;lt;3;
+n += (!!(x&amp;gt;&amp;gt;(n+4)))&amp;lt;&amp;lt;2;
+n += (!!(x&amp;gt;&amp;gt;(n+2)))&amp;lt;&amp;lt;1;
+n += (!!(x&amp;gt;&amp;gt;(n+1)));
+n += (!!n) + (!(1^x)) + 1;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;So, with this optimization, total ops reduces to 36. From 84 to 36, it&#39;s a great leap forward. We beat the boss!&lt;/p&gt;
+
+&lt;h2&gt;Summary&lt;/h2&gt;
+
+&lt;p&gt;This lab is excited and time consuming. It took me days to come up to a great optimization. But that was exactly where the fun lies. Can&#39;t wait to get my hands on the second lab.&lt;/p&gt;
+</content>
+   </entry>
+   
+   <entry>
+     <title>My final CPC: memorial to SYSUCPC 14'</title>
+     <link href="http://ysite.me/memorial-to-the-sysucpc14"/>
+     <updated>2014-04-12T00:00:00-04:00</updated>
+     <id>http://beiyuu.com/memorial-to-the-sysucpc14</id>
+     <content type="html">&lt;h2&gt;Our team&lt;/h2&gt;
+
+&lt;p&gt;My teammates are &lt;a href=&quot;http://blog.t-xx.me/&quot;&gt;txx&lt;/a&gt; and &lt;a href=&quot;http://www.ghost233.me/&quot;&gt;Ghost&lt;/a&gt;. Actually, we teamed up when we were freshmen to participate in the SYSUCPC 11&#39;. But at that time we were kind of arrogant because three of us started programming before entering university and they two even didn&#39;t take the GaoKao (winning the first prize in the NOIP will grant you an admission to almost any university in China). The arrogance kicked us and we didn&#39;t win the first prize and hence the entrance to the GDCPC 11&#39;.&lt;/p&gt;
+
+&lt;p&gt;If you read the About Me page carefully, you will know that txx and Ghost are also my team members in Martin Network. Indeed, we are an effective team.&lt;/p&gt;
+
+&lt;h2&gt;Why we participate in SYSUCPC in our senior year?&lt;/h2&gt;
+
+&lt;p&gt;During the registration, we can hardly see teams consist of senior students. Many senior students are engaged in the internship or travelling. But three of us are relatively free this time. Txx is now a technical director in an steadily-developing start-up. Ghost left Flamingo and is now looking for a new employer. As for me, I&#39;m living the most comfortable life among classmates after I accepted the admission from CMU.&lt;/p&gt;
+
+&lt;p&gt;Besides, we think this is the last time we can participate in a CPC. So we don&#39;t want to waste the chance to memorize the time when we were fighting in an programming contest. All of us started participating in such contest at least in ninth grade. So it means much in our lives.&lt;/p&gt;
+
+&lt;h2&gt;Online preliminary contest&lt;/h2&gt;
+
+&lt;p&gt;The number of teams registered for SYSUCPC 14&#39; exceeded 150, the maximun capacity of the computer room. So there has to be a preliminary contest to select 150 teams to take the formal SYSUCPC 14&#39;. This contest was held at &lt;a href=&quot;http://soj.me/&quot;&gt;Sicily&lt;/a&gt;, the online judge system of SYSU.&lt;/p&gt;
+
+&lt;p&gt;At that night of the contest, Ghost was sick and given a drip in hospital. Txx was still in Beijing, meeting clients of the start-up. So I had to solve the problems on my own. Haven&#39;t coded for about one year, I was a little bit nervous. But several years&#39; programming experience made me solve the first two easy problems quickly. After gaining some confidence, I started to solve the third problem. I knew how to solve, but it was just a little tricky. I coded for about an hour and finally it was accepted after two submissions.&lt;/p&gt;
+
+&lt;p&gt;Realizing that not much time left and we were at a good ranking, I stopped writing and started to chat with txx and Ghost. They were discussing how another problem could possibly be solved. And I occasionally expressed my opinions and joked. Anyway, this contest is more a warm-up than a contest for us.&lt;/p&gt;
+
+&lt;h2&gt;First round contest&lt;/h2&gt;
+
+&lt;p&gt;Not like before, SYSUCPC 14&#39; consists of two separate contests. Top 40 teams will be authorized to take the second one. The second contest is Guangdong VS Zhejiang CPC. There&#39;re ten teams from ten universities respectively from Guangdong and Zhejiang, five from GD and five from ZJ. Other selected teams would take the synchronous contest, which means we solve the problems at the same time with those 10 teams, but we share different rankings.&lt;/p&gt;
+
+&lt;p&gt;So the goal of the first contest would be ranking top 40. At first we were not confident about that because three of us hadn&#39;t trained for more than one year, but after careful analysis, we thought we have great chance. And it turned out to be right.&lt;/p&gt;
+
+&lt;p&gt;In the first hour we solved three easy problems. After that, txx was coding on a simple but tricky problem. And I was working on a pure dynamic programming problem. but with extremely large scale input data (10&lt;sup&gt;9&lt;/sup&gt;). An algorithm with O(n) time complexity would result in TLE. So we had to either think of a mathematical method to simplify it, or reduce the complexity to O(lgn).&lt;/p&gt;
+
+&lt;p&gt;When I was struggling, txx&#39;s program was accepted and only one hour was left. At that time, we ranked 30+ and was at the fringe entering second round. Before that, I was trying mathematical methods, but failed. So I turned to state transition function. After several tries, I successfully divided the sub-problem in a half scale. So the overall complexity became O(lgn). I was so excited and went to code.&lt;/p&gt;
+
+&lt;p&gt;The first time I submitted my code, I got WA. Would that be caused by a wrong state transition function? I checked the function carefully and assured the righteousness of it. Curious enough, I read my code one line by another. And I found that I wrote &quot;a * b;&quot; instead of &quot;a *= b;&quot; by mistake. What an idiot. After correcting this, I submitted again and got Accepted. At that time only 20 minutes left.&lt;/p&gt;
+
+&lt;p&gt;Finally in the first round, we ranked 16, which surprised us a lot. And we had a great dinner in an Mexican Restaurant. BTW, there are almost all foreigners in that restaurant. Txx and Ghost said the food was delicious, but I tasted bland because I got a cold that day. After the dinner I felt even worse. I went back to dormitory quickly, took a shower and went to sleep early.&lt;/p&gt;
+
+&lt;h2&gt;Second round contest&lt;/h2&gt;
+
+&lt;p&gt;Thanks to the antibiotic, I was feeling well at the day of second round contest. With the good ranking in the first round, we were confident about ourselves.&lt;/p&gt;
+
+&lt;p&gt;Five minutes after the contest began, more and more teams solved the first problem. It was a game theory problem and we couldn&#39;t find a way to solve it. With simple test, we guessed that if the size is larger than 3, the first player wins, otherwise the second. Apparently it was wrong. But almost all teams solved that problem, we thought it must be very simple. So we guessed that when the size is even, the first player wins, otherwise the second. Surprisingly but not unexpectedly, it was accepted. So we quickly moved on to the next problem.&lt;/p&gt;
+
+&lt;p&gt;The second is a greedy algorithm. After several discussions, I began coding. The first submission got TLE because I set a three-dimensional array with a 3-level nested loop rather than memset() function. After I using memset(), it was accepted. So far so good.&lt;/p&gt;
+
+&lt;p&gt;However, our tragedy began. Txx and I was think about a mathematical problem, which many teams solved, while Ghost was coding on a simple but very tricky problem. Three hours passed, and neither of us made it through. It seemed that the mathematical problem could be solved, but the idea slipped away every time I tried to catch it. Ghost always had a bad reputation on his correctness of coding. This time was no exception. WA, WA and WA. Finally we only solved two problems.&lt;/p&gt;
+
+&lt;p&gt;After the contest, we went to MingChu in Jiangnan Xi for dinner. The curry there catches me every time. At dinner, we talked about the Sui Bian in RBT. Ghost recommended it but both txx and I hadn&#39;t tasted. So we gave it a try after the dinner. Still not satisfied, we went to Mr. X to play Penetralium Escaping. Maybe we were disappointed about our performance in the contest, we played hard to escape from penetralium. In the end, we managed to escape right before the time ran out. Not a bad day ha.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/memorial_to_sysucpc14/p1.jpg&quot;&gt;&lt;/p&gt;
+
+&lt;h2&gt;Prostscript&lt;/h2&gt;
+
+&lt;p&gt;Txx said after the second round contest, &#39;never let Ghost debug more than 1 hour next time&#39;. Aha indeed. But this is the last time. Where is next time?&lt;/p&gt;
+</content>
+   </entry>
+   
+   <entry>
+     <title>Change the look of my blog</title>
+     <link href="http://ysite.me/change-the-look-of-my-blog"/>
+     <updated>2014-04-09T08:05:20-04:00</updated>
+     <id>http://beiyuu.com/change-the-look-of-my-blog</id>
+     <content type="html">&lt;p&gt;The default theme of Jekyll is too simple and looks not very well. After careful search, I found &lt;a href=&quot;http://jekyllbootstrap.com/&quot;&gt;Jekyll Bootstrap&lt;/a&gt; might be a good way to construct my own blog. But the themes JB provides didn&#39;t satisfy me. Plus, I know little about front-end and can almost do nothing to change the way it looks like. So I decide to use the style of &lt;a href=&quot;http://beiyuu.com/&quot;&gt;BeiYuu&lt;/a&gt;. Thank BeiYuu for his generous open source of his own blog.&lt;/p&gt;
+
+&lt;p&gt;When constructing this new blog, I learnt so much about the front-end. Without the help of &lt;a href=&quot;https://typeof.us/&quot;&gt;rex&lt;/a&gt;, I would not accomplish this. Many thanks to rex, my dear roommate.&lt;/p&gt;
+</content>
+   </entry>
+   
+   <entry>
+     <title>Switch to GitHub Pages + Jekyll!</title>
+     <link href="http://ysite.me/my-new-blog"/>
+     <updated>2014-03-03T14:37:20-05:00</updated>
+     <id>http://beiyuu.com/my-new-blog</id>
+     <content type="html">&lt;p&gt;After months&#39; delay, I finally continue to write the blog. Due to the shortage of money, I cannot afford an VPS, even if I share the rent with a friend. On the other hand, WordPress is a little bit clumsy for me. So I switch to the GitHub Pages. All the posts are safely stored on GitHub and I have no need to worry about the backup when VPS expires. Besides, the style is so simple and neat, which perfectly satisfies me. Everything looks great here.&lt;/p&gt;
+
+&lt;p&gt;I will find some valuable posts on my earlier blog and post here. Hope I can keep the blog rate at one post per week. Kill the procrastination!&lt;/p&gt;
+</content>
+   </entry>
+   
+   <entry>
+     <title>Write your own linux shell</title>
+     <link href="http://ysite.me/write-your-own-linux-shell"/>
+     <updated>2012-06-30T00:00:00-04:00</updated>
+     <id>http://beiyuu.com/write-your-own-linux-shell</id>
+     <content type="html">&lt;h2&gt;什么是shell&lt;/h2&gt;
+
+&lt;p&gt;shell是提供操作系统内核级服务的一个用户调度接口，一般分为两种：命令行接口（Command-Line Interface, CLI）和图形化接口（Graphical User Interface, GUI）。对于我们常用的Windows系统来说，大家一般接触的最多的是GUI。使用鼠标指指点点就可以完成大部分的工作。然而在GUI出现之前，shell就是CLI的天下，即便是到了今天windows统治了PC大部分的市场，CLI的shell依然有他不可替代的优势——更加底层、更加接近问题的中心。&lt;/p&gt;
+
+&lt;p&gt;CMD命令行可以认为是Windows下的CLI shell，而在Unix/Linux下，其CLI shell通常被叫做terminal。在terminal里面，我们就需要通过输入各种命令来完成平常鼠标指指点点完成的操作，例如新建文件夹，重命名文件等。&lt;/p&gt;
+
+&lt;p&gt;既然shell是一个介于用户和系统内核之间的一个程序，那只要知道了如何调用一些系统函数，我们就可以实现一个我们自己的shell。由于linux开源的特性，我们可以很便捷的查到linux提供的系统级函数，实现也比较方便。事实上，linux下可供选择的shell也比较多，一般我们常用的shell是&lt;a href=&quot;http://en.wikipedia.org/wiki/Stephen_R._Bourne&quot;&gt;Steven Bourne&lt;/a&gt;编写的&lt;a href=&quot;https://www.gnu.org/software/bash/&quot;&gt;BASH&lt;/a&gt;（GNU Bourne-Again Shell）。而在windows下，由于其源代码并未开放，要为其实现一个完整功能的shell比较困难，但是我们仍然可以利用现有能够调用的函数来实现一个简单的shell。&lt;/p&gt;
+
+&lt;h2&gt;实现shell的基本原理&lt;/h2&gt;
+
+&lt;p&gt;前面我们说到shell主要的功能就是把系统函数封装一遍提供给用户调用。那么shell的基本工作流程就比较清楚了：接收用户输入-&gt;分析其命令-&gt;调用系统函数-&gt;输出运行结果。&lt;/p&gt;
+
+&lt;p&gt;这里我们主要分析调用系统函数这部分，以linux为例进行分析。我们知道linux是一个开源的系统，所有人都可以修改其源代码，或者为其添加小工具。所以在linux下，最基本的功能都是一个个独立的小程序，由不同的人编写。例如我们使用率极高的ls、cp、mv等命令，都是对应一个程序，放在系统环境目录下。当我们输入ls时，系统会在环境目录下面去寻找ls这个程序来运行。所以在编写linux的shell时，我们就可以直接调用这些小程序。&lt;/p&gt;
+
+&lt;p&gt;而除了这些系统命令，shell还应该实现一些内置的命令，例如使用的最频繁的cd命令。这个命令不是系统命令，在PATH路径下是无法找到此程序的，他的实现是在shell内部实现的。所以我们需要在我们的shell的代码里面单独判断这些内置命令进行实现。&lt;/p&gt;
+
+&lt;p&gt;综上所述，我们可以得到一个shell的主要工作流程如下图所示：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/write_your_own_linux_shell/p1.png&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;【shell程序主要流程】&lt;/p&gt;
+
+&lt;h2&gt;linux下shell的具体实现&lt;/h2&gt;
+
+&lt;h3&gt;词法分析&lt;/h3&gt;
+
+&lt;p&gt;在获取到了用户输入的命令后的第一步，就是要对指令进行分解和解析。对指令的分析，实际上是对词法分析的过程。在编译原理里面，&lt;a href=&quot;http://dinosaur.compilertools.net/lex/&quot;&gt;lex&lt;/a&gt;和&lt;a href=&quot;http://dinosaur.compilertools.net/yacc/&quot;&gt;yacc&lt;/a&gt;是两个非常有名的词法解析工具。两者都有GNU的版本，分别叫做&lt;a href=&quot;http://dinosaur.compilertools.net/flex/&quot;&gt;flex&lt;/a&gt;和&lt;a href=&quot;http://dinosaur.compilertools.net/bison/&quot;&gt;bison&lt;/a&gt;。使用这两者来替代我们的词法分析工作是非常惬意的事，毕竟这是拿来写编译器的利器，用来应付我们这简单的shell完全不在话下。而且在BASH里面的确也是用到了词法分析和yacc这两个工具。&lt;/p&gt;
+
+&lt;p&gt;但是杀鸡焉用宰牛刀，我们只是想要实现一个简单的shell，并无过多的要求，而且lex的学习成本非常之高，要熟练使用需要很长的学习时间。所以我们这里就简单使用字符串处理来完成词法分析。&lt;/p&gt;
+
+&lt;p&gt;我们这里的词法分析主要任务是把输入的指令分解出命令和参数，然后判断是不是shell内部命令，如果是则进行特殊处理。否则就把命令和参数传给exec函数族进行小工具调用。其中还涉及到管道的“|”、重定向的“&amp;lt;”和“&gt;”、后台程序的“&amp;amp;”和指令结束的“;”等特殊符号的处理。由于是手工处理词法分析，引号的处理就把它暂时忽略了，如果加上引号处理的话就会使代码变得非常臃肿，而且引号在shell命令中出现的频率非常之低。支持引号带来的“性价比”并不高。&lt;/p&gt;
+
+&lt;p&gt;词法分析的代码我们并没有单独做成一个模块，而是把他们融合在代码执行的过程中，这样虽然耦合性较高，但是使用起来较为方便。而且如果需要解耦的话，我们完全可以使用上面说到的flex来实现。&lt;/p&gt;
+
+&lt;h3&gt;shell内置命令的实现&lt;/h3&gt;
+
+&lt;p&gt;前面说到cd和exit等命令是属于shell的内部命令，也即在PATH路径下是找不到相关的程序的（你可以尝试到你的linux的PATH目录下去搜索一下cd）。所以这一些特殊的命令是需要我们单独在shell里面实现的。在我们的shell里面我们内置了如下几个命令：cd（改变工作目录）、about（显示个性化说明信息）、exit（离开shell）。&lt;/p&gt;
+
+&lt;p&gt;这几个命令的实现都不难，cd可以调用chdir()函数（在&lt;a href=&quot;http://pubs.opengroup.org/onlinepubs/7908799/xsh/unistd.h.html&quot;&gt;unistd.h&lt;/a&gt;里）进行工作目录的切换，注意一下返回值的错误判断即可。about和exit命令就更加简单，about就输出一段说明文字即可，exit退出还需要注意各种内存的释放，不要忘记free掉malloc得到的空间造成内存泄漏。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/write_your_own_linux_shell/p2.png&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;【图2】cd命令的实现&lt;/p&gt;
+
+&lt;h3&gt;linux命令的实现&lt;/h3&gt;
+
+&lt;p&gt;如之前所述，linux内置程序命令的执行是直接调用PAHT路径下的程序来运行实现的。我们可以使用exec函数族（在unistd.h中）函数来进行调用。只需要把命令和参数分别传给这个函数，他就会自动在PATH目录下搜索相应的程序并且运行。但是这个函数族有一个缺点，就是他会替代掉我们这个进程的上下文，导致那个小程序运行完后整个程序就运行完了。直观点看这个问题就是，我在shell里面输入ls，当前目录下的文件显示出来之后整个shell就关闭了。这显然是不符合shell的要求的。&lt;/p&gt;
+
+&lt;p&gt;这样我们就要利用到linux下的一个神级系统函数&lt;a href=&quot;http://man7.org/linux/man-pages/man2/fork.2.html&quot;&gt;fork()&lt;/a&gt;函数，他的功能是创建一个子进程，并且把当前程序的上下文环境复制到子进程里面。利用这个函数，我们在要调用一个命令时，先开一个子进程，在子进程里面调用exec函数族的函数，这样调用结束后结束的是子进程，并不会干扰到我们的shell父进程。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/write_your_own_linux_shell/p3.png&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;【图3】linux命令处理流程&lt;/p&gt;
+
+&lt;p&gt;还有一个需要注意的地方，在调用了exec进行系统函数调用之后，用户可以对程序发送一系列信号。例如按住CTRL+C来中止当前程序的运行，这对程序来说是非正常结束，返回值不为0，需要捕获一下以备以后来进行处理。还有，当在shell内等待输入的时候捕获到了CTRL+C的中止信号，shell不应该被直接结束，按照BASH的风格是不做处理。所以我们也对程序进行一个&lt;a href=&quot;http://en.wikipedia.org/wiki/SIGINT_(POSIX)#SIGINT&quot;&gt;SIGINT&lt;/a&gt;信号的捕获，捕获之后不做任何事。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/write_your_own_linux_shell/p3.png&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;【图4】中止信号响应函数&lt;/p&gt;
+
+&lt;h2&gt;管道、流重定向以及后台运行的实现&lt;/h2&gt;
+
+&lt;p&gt;在BASH里面，可以使用“|”符号进行管道操作，即把此符号之前的命令的输出作为之后的命令的输入。还可以使用流重定向符“&amp;lt;”和“&gt;”把输入或者输出流进行重定向到文件里面。还支持“&amp;amp;”让程序后台运行。我们自己的shell也需要实现这两个功能。&lt;/p&gt;
+
+&lt;p&gt;代码中通过pipe()函数来创建管道，创建之后父进程和子进程一个只能向管道写内容，一个只能向管道读内容。然后利用dup2()函数来把进程的输入流或者输出流重定向到管道里，这样就能实现管道的操作。实现的时候注意可以使用多个“|”来迭代进行管道操作，需要使用一个循环来处理。同时还要注意最后一个操作的输出流是标准输出（即屏幕），不需要重定向到管道里，需要特殊处理一下。&lt;/p&gt;
+
+&lt;p&gt;流重定向的处理比较简单，可以在一开始的时候就定义文件符，并且默认指向标准输入输出流。然后判断命令里是否存在流重定向符，如果存在则将文件符指向相应的文件。如此便可以使用文件输入输出统一输入输出方式，操作比较方便。&lt;/p&gt;
+
+&lt;p&gt;后台运行的处理方式更加简便，开始时先判断是否存在“&amp;amp;”字符，如果存在就把“&amp;amp;”在命令里删除并且把标识符置1，否则置0。然后父进程里面直接判断标识符，如果为1则不需等待子进程，否则就等待子进程即可。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/write_your_own_linux_shell/p3.png&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;【图5】主函数中调用相应的操作&lt;/p&gt;
+
+&lt;h2&gt;可以改进的地方&lt;/h2&gt;
+
+&lt;p&gt;Linux版的shell基本实现BASH的大部分功能，但还是有小部分没有完全实现。例如上下箭头的历史记录以及TAB自动补全的支持。这个可以使用&lt;a href=&quot;http://cnswww.cns.cwru.edu/php/chet/readline/rltop.html&quot;&gt;readline&lt;/a&gt;库来实现。还有就是上面提到的对于引号的支持，这个我暂时还没有花时间去思考，不过应该不难实现。
+另外，在编写的过程中发现了&lt;a href=&quot;http://book.douban.com/subject/1788421/&quot;&gt;《UNIX环境高级编程》&lt;/a&gt;这本神书，非常推荐看。&lt;/p&gt;
+</content>
+   </entry>
+   
+ 
+</feed>

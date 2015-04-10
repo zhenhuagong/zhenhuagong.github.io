@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!--
+    * Author:         pystone(based on BeiYuu)
+    -->
+    <meta charset="utf-8" />
+    <title>ySite</title>
+    <meta name="author" content="pystone" />
+    <meta name="renderer" content="webkit">
+    <meta name="description" content="pystone's Blog" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+    <link rel="stylesheet" href="/css/default.css" type="text/css" />
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+    <link rel="alternate" type="application/atom+xml" title="Recent Entries" href="/atom.xml" />
+    <script src="/js/jquery-1.7.1.min.js" type="text/javascript"></script>
+</head>
+<body>
+
+
+    <!-- contant menu
+        <div class="home-menu">
+        <div class="home-icon-con">
+            <a class="home-menu-icon" href="/">ySite</a>
+            <a class="home-follow" href="#" title="Contact Me">+</a>
+        </div>
+        <div class="home-contact">
+            <a href="https://www.linkedin.com/in/pystone" target="_blank" style="margin-left:-5px;"><img src="https://static.licdn.com/scds/common/u/img/icon/apple-touch-icon.png" alt="" width="25"/></a>
+            <a href="http://github.com/pystone" target="_blank" style="text-align:center;"><img src="https://www.github.com/favicon.ico" alt="" width="22"/></a>
+            <a href="http://instagram.com/pystone/" target="_blank" style="text-align:right"><img src="http://d36xtkk24g8jdx.cloudfront.net/bluebar/00c6602/images/ico/favicon.ico" alt="" width="22"/></a>
+        </div>
+    </div> 
+    -->
+
+    <div class="index-content me">
+  <div class="section">
+    <ul class="artical-cate">
+      <li><a href="/blog.html"><span>Tech</span></a></li>
+      <li style="text-align:center"><a href="/life"><span>Life</span></a></li>
+      <li class="on" style="text-align:right"><a href="/me"><span>About Me</span></a></li>
+    </ul>
+
+    <div class="cate-bar"><span id="cateBar"></span></div>
+
+    <ul id="me-content">
+      <li>
+      <div class="me-content">
+        <h2><strong>Yang Pan</strong></h2>
+
+<h3>Mobile Game Developer</h3>
+
+<p>Once I teamed up with a junior and two other classmates (<a href="http://www.ghost233.me/">Ghost</a>, <a href="http://blog.t-xx.me/">txx</a>) to develop mobile games on iOS platform in my freshman year. Our team was Martin Network and we see ourselves as a start-up. During this time, some of our projects are available online (among which I participated in <em><a href="https://itunes.apple.com/cn/app/bu-yu-da-ren-zhi-shen-hai/id434796026?mt=8">Fishing Joy: Hunting in the Sea</a></em>, <em><a href="https://itunes.apple.com/us/app/mei-li-ren-sheng/id530398529?mt=8">Beautiful Life</a></em> and <em><a href="https://itunes.apple.com/us/app/ji-su-fei-dan/id505841339?mt=8">Egg Rush</a></em>), but there are also many aborted projects that cannot be put on the Internet due to some commercial issues.</p>
+
+<p>One year and a half later, we received funds from <a href="http://en.chukong-inc.com/">Chukong Inc.</a> and registered to be a company named Flamingo Tech Inc. We cooperated with other leading companies in China to develop games. Among these games, I participated in <em><a href="https://itunes.apple.com/cn/app/wo-jiaomt-online/id560104652?l=en&amp;mt=8">I'm MT online</a></em> and <em><a href="https://itunes.apple.com/cn/app/fan-ren-xiu-zhen/id682389760?mt=8">Fanren Xiuzhen</a></em>. However, as the company growing, I was sick of the administrative stuffs and "office politics". Besides, I have always been dreaming to study abroad. So I left the company and applied for graduate school in my junior year.</p>
+
+<h3>Former Undergraduate at Sun Yat-sen University (Guangzhou)</h3>
+
+<p>Though majoring in Network Engineering, I'm not very interested in the network field. Were I a network engineer, I might have built a safer and faster network, but that's still a pipe. As a programmer, however, I could create colorful contents flowing in that pipe that better entertain and serve human beings. Thus, I see myself as a CSer :P</p>
+
+<p>During the undergraduate, I joined in Guangdong Key Laboratory of Information Security. In the lab, I participated in a research on software protection against reverse engineering. I designed and implemented Dung - a binary obfuscator - in C++, which became my undergraduate thesis. The obfuscator reads in the object files, links them, relocates them, obfuscates them and outputs an executable.</p>
+
+<h3>Graduate Student at Carnegie Mellon University</h3>
+
+<p>Now I'm a graduate student in <a href="http://www.ini.cmu.edu/">Information Networking Institute(INI)</a> at Carnegie Mellon University. The first year study is at the main campus of CMU in Pittsburgh. After that, I want to have an internship in Silicon Valley for Summer 2015, and then finish my study in <a href="http://www.cmu.edu/silicon-valley/">Silicon Valley campus</a> of CMU.</p>
+
+      </div>
+      </li>
+    </ul>
+
+  </div>
+  <div class="aside">
+  </div>
+</div>
+
+
+<script type="text/javascript">
+    $(function(){
+        function animateBar($item,noAni){
+            var spanLeft = $item.find('span').offset().left;
+            var conLeft = $item.parent().offset().left;
+            var left = spanLeft - conLeft;
+            var width = $item.find('span').width() + 8;
+
+            if(noAni){
+                $('#cateBar').css({left:left,width:width})
+            }else{
+                $('#cateBar').stop().animate({left:left,width:width},300)
+            }
+        }
+
+        var waitForFinalEvent = (function () {
+            var timers = {};
+            return function (callback, ms, uniqueId) {
+                if (!uniqueId) {
+                    uniqueId = "Don't call this twice without a uniqueId";
+                }
+                if (timers[uniqueId]) {
+                    clearTimeout (timers[uniqueId]);
+                }
+                timers[uniqueId] = setTimeout(callback, ms);
+            };
+        })();
+
+        $('.artical-cate li').mouseenter(function(){
+            animateBar($(this));
+        }).mouseleave(function(){
+            animateBar($('.artical-cate .on'));
+        });
+
+        $(window).resize(function(e){
+            waitForFinalEvent(function(){
+                animateBar($('.artical-cate .on'));
+            })
+        })
+        animateBar($('.artical-cate .on'),true);
+    });
+</script>
+
+
+    <!--**********************************-->
+    <!--****** Statistic code begin ******-->
+    <!--******  Remember to delete  ******-->
+    <!--**********************************-->
+    <div class="hide">
+        <script type="text/javascript" src="http://js.tongji.linezing.com/3424900/tongji.js"></script>
+        <noscript><a href="http://www.linezing.com"><img src="http://img.tongji.linezing.com/3424900/tongji.gif"/></a></noscript>
+    </div>
+    <!--**********************************-->
+    <!--******  Statistic code end  ******-->
+    <!--******  Remember to delete  ******-->
+    <!--**********************************-->
+
+    <script type="text/javascript">
+        $(function(){
+            $('.home-follow').click(function(e){
+                e.preventDefault();
+
+                if($('.home-contact').is(':visible')){
+                    $('.home-contact').slideUp(100);
+                }else{
+                    $('.home-contact').slideDown(100);
+                }
+            });
+        })
+    </script>
+</body>
+</html>
